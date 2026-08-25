@@ -1,7 +1,7 @@
 #!/usr/bin/with-contenv bash
 set -euo pipefail
 
-#bashio::log.info "Starting Shakes & Fidget Reader"
+bashio::log.info "Starting Shakes & Fidget Reader"
 
 export SFGAME_USERNAME="$(bashio::config 'sfgame_username')"
 export SFGAME_PASSWORD="$(bashio::config 'sfgame_password')"
