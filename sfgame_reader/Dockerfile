@@ -5,10 +5,9 @@ RUN apk add --no-cache musl-dev
 WORKDIR /usr/src/sfgame-reader
 
 COPY Cargo.toml Cargo.lock ./
-RUN cargo fetch
-
 COPY src ./src
 
+RUN cargo fetch
 RUN cargo build --release
 
 FROM ghcr.io/home-assistant/base:latest
