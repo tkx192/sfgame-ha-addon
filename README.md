@@ -1,6 +1,9 @@
+### Bitte noch nicht nutzen! ###
+### App noch ohne Funktion! ###
+
 # Shakes & Fidget Reader – Home Assistant App
 
-Ein experimentelles Home-Assistant-App (früher Add-on) für read-only Monitoring eines **Shakes & Fidget**-Charakters.
+Eine experimentelle Home Assistant App (früher Add-on) für read-only Monitoring eines **Shakes & Fidget**-Charakters.
 
 Die S&F-Kommunikation wird nicht selbst neu implementiert. Das App verwendet das aktuelle inoffizielle Rust-Projekt [`the-marenga/sf-api`](https://github.com/the-marenga/sf-api) für Login, Session-Handling, Verschlüsselung und das Parsen des GameState.
 
@@ -22,7 +25,3 @@ Nach dem ersten erfolgreichen Login werden automatisch MQTT-Discovery-Entities f
 Der Rohzustand liegt unter:
 
 `sfgame/<character_slug>/state`
-
-## Entwicklungsstand
-
-Version 0.1.0 ist bewusst klein gehalten. Als nächstes können wir anhand der bereits aufgenommenen HAR und des `sf-api`-GameState gezielt weitere Werte wie Festung, Dungeons, Haustiere und Timer als Home-Assistant-Sensoren abbilden.
