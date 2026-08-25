@@ -1,6 +1,6 @@
 ARG BUILD_FROM
 
-FROM rust:alpine AS builder
+FROM ghcr.io/home-assistant/amd64-base:latest
 
 RUN apk add --no-cache musl-dev
 
