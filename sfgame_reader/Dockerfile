@@ -11,6 +11,8 @@ RUN cargo build --release
 
 FROM ghcr.io/home-assistant/base:latest
 
+RUN apk add --no-cache bashio
+
 COPY --from=builder /usr/src/sfgame-reader/target/release/sfgame-reader /usr/bin/sfgame-reader
 COPY run.sh /run.sh
 
