@@ -7,7 +7,6 @@ WORKDIR /usr/src/sfgame-reader
 COPY Cargo.toml Cargo.lock ./
 COPY src ./src
 
-RUN cargo fetch
 RUN cargo build --release
 
 FROM ghcr.io/home-assistant/base:latest
