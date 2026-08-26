@@ -1,17 +1,19 @@
 #!/usr/bin/env bashio
-set -euo pipefail
 
 bashio::log.info "Starting Shakes & Fidget Reader"
 
-export SFGAME_USERNAME="$(bashio::config 'sfgame_username')"
-export SFGAME_PASSWORD="$(bashio::config 'sfgame_password')"
-export CHARACTER_NAME="$(bashio::config 'character_name')"
-export POLL_INTERVAL_SECONDS="$(bashio::config 'poll_interval_seconds')"
-export PUBLISH_FULL_GAMESTATE="$(bashio::config 'publish_full_gamestate')"
+echo "SUPERVISOR: ${SUPERVISOR:-<missing>}"
+echo "SUPERVISOR_TOKEN present: $([[ -n "${SUPERVISOR_TOKEN:-}" ]] && echo yes || echo no)"
+echo "options.json:"
+cat /data/options.json
 
-export MQTT_HOST="$(bashio::services mqtt 'host')"
-export MQTT_PORT="$(bashio::services mqtt 'port')"
-export MQTT_USERNAME="$(bashio::services mqtt 'username')"
-export MQTT_PASSWORD="$(bashio::services mqtt 'password')"
+bashio::log.info "Testing Supervisor API..."
 
-exec /usr/bin/sfgame-reader
+curl -sS \
+  -o /tmp/supervisor-response \
+  -w "HTTP_STATUS=%{http_code}\n" \
+  -H "Authorization: Bearer ${SUPERVISOR_TOKEN}" \
+  http://supervisor/addons/self/options/config || true
+
+echo "Response:"
+cat /tmp/supervisor-response || true
