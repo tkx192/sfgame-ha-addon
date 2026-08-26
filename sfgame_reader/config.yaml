@@ -1,5 +1,5 @@
 name: Shakes & Fidget Reader
-version: 0.1.7
+version: 0.1.8
 description: >-
   Read-only Shakes & Fidget character monitoring via the unofficial sf-api
   library and publish the current state to Home Assistant over MQTT.
@@ -7,18 +7,24 @@ slug: sfgame_reader
 arch:
   - amd64
   - aarch64
+
 startup: application
 boot: auto
 init: false
 stage: experimental
+
+hassio_api: true
+
 services:
   - mqtt:need
+
 options:
   sfgame_username: ""
   sfgame_password: ""
   character_name: ""
   poll_interval_seconds: 300
   publish_full_gamestate: false
+
 schema:
   sfgame_username: str
   sfgame_password: password
