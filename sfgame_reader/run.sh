@@ -1,4 +1,4 @@
-#!/usr/bin/with-contenv bash
+#!/usr/bin/env bashio
 set -euo pipefail
 
 bashio::log.info "Starting Shakes & Fidget Reader"
