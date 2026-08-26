@@ -4,22 +4,41 @@ set -euo pipefail
 
 echo "[INFO] Starting Shakes & Fidget Reader"
 
-export SFGAME_USERNAME="$(jq -r '.sfgame_username // empty' /data/options.json)"
-export SFGAME_PASSWORD="$(jq -r '.sfgame_password // empty' /data/options.json)"
-export CHARACTER_NAME="$(jq -r '.character_name // empty' /data/options.json)"
-export POLL_INTERVAL_SECONDS="$(jq -r '.poll_interval_seconds // 300' /data/options.json)"
-export PUBLISH_FULL_GAMESTATE="$(jq -r '.publish_full_gamestate // false' /data/options.json)"
+OPTIONS="/data/options.json"
 
-MQTT_HOST="$(bashio::services mqtt host)"
-MQTT_PORT="$(bashio::services mqtt port)"
-MQTT_USERNAME="$(bashio::services mqtt username)"
-MQTT_PASSWORD="$(bashio::services mqtt password)"
+export SFGAME_USERNAME="$(jq -r '.sfgame_username // empty' "$OPTIONS")"
+export SFGAME_PASSWORD="$(jq -r '.sfgame_password // empty' "$OPTIONS")"
+export CHARACTER_NAME="$(jq -r '.character_name // empty' "$OPTIONS")"
+export POLL_INTERVAL_SECONDS="$(jq -r '.poll_interval_seconds // 300' "$OPTIONS")"
+export PUBLISH_FULL_GAMESTATE="$(jq -r '.publish_full_gamestate // false' "$OPTIONS")"
 
-export MQTT_HOST
-export MQTT_PORT
-export MQTT_USERNAME
-export MQTT_PASSWORD
+if [[ -z "${SFGAME_USERNAME}" || -z "${SFGAME_PASSWORD}" ]]; then
+    echo "[ERROR] Shakes & Fidget credentials are not configured"
+    exit 1
+fi
+
+if [[ -z "${SUPERVISOR_TOKEN:-}" ]]; then
+    echo "[ERROR] Supervisor API token is not available"
+    exit 1
+fi
+
+MQTT_JSON="$(
+    curl --fail --silent --show-error \
+        -H "Authorization: Bearer ${SUPERVISOR_TOKEN}" \
+        "http://supervisor/services/mqtt"
+)"
+
+export MQTT_HOST="$(jq -r '.host // empty' <<< "$MQTT_JSON")"
+export MQTT_PORT="$(jq -r '.port // 1883' <<< "$MQTT_JSON")"
+export MQTT_USERNAME="$(jq -r '.username // empty' <<< "$MQTT_JSON")"
+export MQTT_PASSWORD="$(jq -r '.password // empty' <<< "$MQTT_JSON")"
+
+if [[ -z "${MQTT_HOST}" || -z "${MQTT_USERNAME}" || -z "${MQTT_PASSWORD}" ]]; then
+    echo "[ERROR] MQTT service configuration is incomplete"
+    exit 1
+fi
 
 echo "[INFO] Configuration loaded"
+echo "[INFO] MQTT service configuration loaded"
 
 exec /usr/bin/sfgame-reader
