@@ -1,19 +1,15 @@
-#!/usr/bin/env bashio
+#!/usr/bin/env bash
 
-bashio::log.info "Starting Shakes & Fidget Reader"
+set -euo pipefail
 
-echo "SUPERVISOR: ${SUPERVISOR:-<missing>}"
-echo "SUPERVISOR_TOKEN present: $([[ -n "${SUPERVISOR_TOKEN:-}" ]] && echo yes || echo no)"
-echo "options.json:"
-cat /data/options.json
+echo "[INFO] Starting Shakes & Fidget Reader"
 
-bashio::log.info "Testing Supervisor API..."
+export SFGAME_USERNAME="$(jq -r '.sfgame_username // empty' /data/options.json)"
+export SFGAME_PASSWORD="$(jq -r '.sfgame_password // empty' /data/options.json)"
+export CHARACTER_NAME="$(jq -r '.character_name // empty' /data/options.json)"
+export POLL_INTERVAL_SECONDS="$(jq -r '.poll_interval_seconds // 300' /data/options.json)"
+export PUBLISH_FULL_GAMESTATE="$(jq -r '.publish_full_gamestate // false' /data/options.json)"
 
-curl -sS \
-  -o /tmp/supervisor-response \
-  -w "HTTP_STATUS=%{http_code}\n" \
-  -H "Authorization: Bearer ${SUPERVISOR_TOKEN}" \
-  http://supervisor/addons/self/options/config || true
+echo "[INFO] Configuration loaded"
 
-echo "Response:"
-cat /tmp/supervisor-response || true
+exec /usr/bin/sfgame-reader
