@@ -1,5 +1,5 @@
 name: Shakes & Fidget Reader
-version: 0.1.6
+version: 0.1.7
 description: >-
   Read-only Shakes & Fidget character monitoring via the unofficial sf-api
   library and publish the current state to Home Assistant over MQTT.
