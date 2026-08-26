@@ -13,9 +13,6 @@ boot: auto
 init: false
 stage: experimental
 
-hassio_api: true
-hassio_role: default
-
 services:
   - mqtt:need
 
